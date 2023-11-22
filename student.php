@@ -116,7 +116,7 @@ class Student {
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             foreach ($result as &$data) {
                 $gender = $data['gender']; // Replace 'gender' with the actual column name in your database
-                $displayGender = ($gender == 1) ? 'F' : 'M';
+                $displayGender = ($gender == 1) ? 'M' : 'F';
                 $data['gender'] = $displayGender;
 
                 $birthdate = $data['birthday']; // Replace 'birthdate' with the actual column name in your database
