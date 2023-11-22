@@ -118,6 +118,10 @@ class Student {
                 $gender = $data['gender']; // Replace 'gender' with the actual column name in your database
                 $displayGender = ($gender == 1) ? 'F' : 'M';
                 $data['gender'] = $displayGender;
+
+                $birthdate = $data['birthday']; // Replace 'birthdate' with the actual column name in your database
+                $displayBirthdate = date('M j Y', strtotime($birthdate));
+                $data['birthday'] = $displayBirthdate;
             }
             
             return $result;
