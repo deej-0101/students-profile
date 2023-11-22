@@ -114,6 +114,12 @@ class Student {
             $stmt = $this->db->getConnection()->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            foreach ($result as &$data) {
+                $gender = $data['gender']; // Replace 'gender' with the actual column name in your database
+                $displayGender = ($gender == 1) ? 'F' : 'M';
+                $data['gender'] = $displayGender;
+            }
+            
             return $result;
         } catch (PDOException $e) {
             // Handle any potential errors here
