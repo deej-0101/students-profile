@@ -38,20 +38,19 @@ class StudentDetails {
     }
 
     // Other CRUD methods for student details
-    public function read($student_id) {
+    public function read($id) {
         try {
             $connection = $this->db->getConnection();
 
-            $sql = "SELECT student_details.id as id, student_details.student_id as student_id,  student_details.contact_number, student_details.street, town_city.name as town_city, province.name as province, student_details.zip_code 
-            FROM student_details, province, town_city where student_details.town_city = town_city.id and student_details.province = province.id and student_id = :student_id ";
+            $sql = "SELECT * FROM student_details WHERE id = :id";
             $stmt = $connection->prepare($sql);
-            $stmt->bindValue(':student_id', $student_id);
+            $stmt->bindValue(':id', $id);
             $stmt->execute();
 
             // Fetch the student data as an associative array
-            $student_detailsData = $stmt->fetch(PDO::FETCH_ASSOC);
+            $studentData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            return $student_detailsData;
+            return $studentData;
         } catch (PDOException $e) {
             echo "Error: " . $e->getMessage();
             throw $e; // Re-throw the exception for higher-level handling
@@ -61,17 +60,17 @@ class StudentDetails {
     public function update($id, $data) {
         try {
             $sql = "UPDATE student_details SET
-                    -- student_id = :student_id,
+                    student_id = :student_id,
                     contact_number = :contact_number,
                     street = :street,
                     zip_code = :zip_code,
                     town_city = :town_city,
                     province = :province
-                    WHERE student_id = :student_id";
+                    WHERE id = :id";
 
             $stmt = $this->db->getConnection()->prepare($sql);
             // Bind parameters
-            //$stmt->bindValue(':id', $data['id']);
+            $stmt->bindValue(':id', $data['id']);
             $stmt->bindValue(':student_id', $data['student_id']);
             $stmt->bindValue(':contact_number', $data['contact_number']);
             $stmt->bindValue(':street', $data['street']);
@@ -110,8 +109,7 @@ class StudentDetails {
 
     public function displayAll(){
         try {
-            $sql = "SELECT student_details.id, student_details.student_id, student_details.street, town_city.name as town_city, province.name as province, student_details.contact_number as contact_number, student_details.zip_code 
-            FROM student_details, province, town_city where student_details.town_city = town_city.id and student_details.province = province.id"; // Modify the table name to match your database
+            $sql = "SELECT * FROM student_details LIMIT 10"; // Modify the table name to match your database
             $stmt = $this->db->getConnection()->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -123,6 +121,43 @@ class StudentDetails {
             throw $e; // Re-throw the exception for higher-level handling
         }
     }
+    public function deleteStudent($id) { # delete function based on student id rather than studentdetail id.
+        try {
+            $sql = "DELETE FROM student_details WHERE student_id = :id";
+            $stmt = $this->db->getConnection()->prepare($sql);
+            $stmt->bindValue(':id', $id);
+            $stmt->execute();
+
+            // Check if any rows were affected (record deleted)
+            if ($stmt->rowCount() > 0) {
+                return true; // Record deleted successfully
+            } else {
+                return false; // No records were deleted (student_id not found)
+            }
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            throw $e; // Re-throw the exception for higher-level handling
+        }
+    }
+    public function searchStudent($studentID) { # Individual Search for a row, plays a main role for merging two tables in one visual table
+        try { # Basically read() but uses studentID
+            $connection = $this->db->getConnection();
+
+            $sql = "SELECT * FROM student_details WHERE student_id = :id";
+            $stmt = $connection->prepare($sql);
+            $stmt->bindValue(':id', $studentID);
+            $stmt->execute();
+
+            // Fetch the student data as an associative array
+            $studentData = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            return $studentData;
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage();
+            throw $e; // Re-throw the exception for higher-level handling
+        }
+    }
 }
+
 
 ?>

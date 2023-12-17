@@ -103,5 +103,19 @@ class Province {
             throw $e; // Re-throw the exception for higher-level handling
         }
     }
+    
+    public function displayLimit($page_first_result,$rows_per_page) {
+        try {
+            $sql = "SELECT * FROM province LIMIT " . $page_first_result . "," . $rows_per_page;
+            $stmt = $this->db->getConnection()->prepare($sql);
+            $stmt->execute();
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Handle errors (log or display)
+            echo "Error: " . $e->getMessage();
+            throw $e; // Re-throw the exception for higher-level handling
+        }
+    }
 }
 ?>

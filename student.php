@@ -110,7 +110,13 @@ class Student {
 
     public function displayAll(){
         try {
-            $sql = "SELECT * FROM students LIMIT 10"; // Modify the table name to match your database
+            $sql = "SELECT students.id, students.student_number, students.first_name, students.last_name, students.middle_name, students.gender, students.birthday,
+            student_details.contact_number, student_details.street, town_city.name as town_city, province.name as province, student_details.zip_code
+            FROM students 
+            INNER JOIN student_details ON students.id = student_details.student_id
+            INNER JOIN province ON student_details.province = province.id
+            INNER JOIN town_city ON student_details.town_city = town_city.id
+            where student_details.town_city = town_city.id and student_details.province = province.id LIMIT 10"; // Modify the table name to match your database
             $stmt = $this->db->getConnection()->prepare($sql);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -132,83 +138,83 @@ class Student {
         }
     }
  
-    /*
-        sample simple tests
-    */
-    public function testCreateStudent() {
-        $data = [
-            'student_number' => 'S12345',
-            'first_name' => 'John',
-            'middle_name' => 'Doe',
-            'last_name' => 'Smith',
-            'gender' => '1',
-            'birthday' => '1990-01-15',
-        ];
+//     /*
+//         sample simple tests
+//     */
+//     public function testCreateStudent() {
+//         $data = [
+//             'student_number' => 'S12345',
+//             'first_name' => 'John',
+//             'middle_name' => 'Doe',
+//             'last_name' => 'Smith',
+//             'gender' => '1',
+//             'birthday' => '1990-01-15',
+//         ];
 
-        $student_id = $this->create($data);
+//         $student_id = $this->create($data);
 
-        if ($student_id !== null) {
-            echo "Test passed. Student created with ID: " . $student_id . PHP_EOL;
-            return $student_id;
-        } else {
-            echo "Test failed. Student creation unsuccessful." . PHP_EOL;
-        }
-    }
+//         if ($student_id !== null) {
+//             echo "Test passed. Student created with ID: " . $student_id . PHP_EOL;
+//             return $student_id;
+//         } else {
+//             echo "Test failed. Student creation unsuccessful." . PHP_EOL;
+//         }
+//     }
 
-    public function testReadStudent($id) {
-        $studentData = $this->read($id);
+//     public function testReadStudent($id) {
+//         $studentData = $this->read($id);
 
-        if ($studentData !== false) {
-            echo "Test passed. Student data read successfully: " . PHP_EOL;
-            print_r($studentData);
-        } else {
-            echo "Test failed. Unable to read student data." . PHP_EOL;
-        }
-    }
+//         if ($studentData !== false) {
+//             echo "Test passed. Student data read successfully: " . PHP_EOL;
+//             print_r($studentData);
+//         } else {
+//             echo "Test failed. Unable to read student data." . PHP_EOL;
+//         }
+//     }
 
-    public function testUpdateStudent($id, $data) {
-        $success = $this->update($id, $data);
+//     public function testUpdateStudent($id, $data) {
+//         $success = $this->update($id, $data);
 
-        if ($success) {
-            echo "Test passed. Student data updated successfully." . PHP_EOL;
-        } else {
-            echo "Test failed. Unable to update student data." . PHP_EOL;
-        }
-    }
+//         if ($success) {
+//             echo "Test passed. Student data updated successfully." . PHP_EOL;
+//         } else {
+//             echo "Test failed. Unable to update student data." . PHP_EOL;
+//         }
+//     }
 
-    public function testDeleteStudent($id) {
-        $deleted = $this->delete($id);
+//     public function testDeleteStudent($id) {
+//         $deleted = $this->delete($id);
 
-        if ($deleted) {
-            echo "Test passed. Student data deleted successfully." . PHP_EOL;
-        } else {
-            echo "Test failed. Unable to delete student data." . PHP_EOL;
-        }
-    }
+//         if ($deleted) {
+//             echo "Test passed. Student data deleted successfully." . PHP_EOL;
+//         } else {
+//             echo "Test failed. Unable to delete student data." . PHP_EOL;
+//         }
+//     }
 }
 
 
-$student = new Student(new Database());
+// $student = new Student(new Database());
 
-// Test the create method
-$student_id = $student->testCreateStudent();
+// // Test the create method
+// $student_id = $student->testCreateStudent();
 
-// Test the read method with the created student ID
-$student->testReadStudent($student_id);
+// // Test the read method with the created student ID
+// $student->testReadStudent($student_id);
 
-// Test the update method with the created student ID and updated data
-$update_data = [
-    'id' => $student_id,
-    'student_number' => 'S67890',
-    'first_name' => 'Alice',
-    'middle_name' => 'Jane',
-    'last_name' => 'Doe',
-    'gender' => '0',
-    'birthday' => '1995-05-20',
-];
-$student->testUpdateStudent($student_id, $update_data);
+// // Test the update method with the created student ID and updated data
+// $update_data = [
+//     'id' => $student_id,
+//     'student_number' => 'S67890',
+//     'first_name' => 'Alice',
+//     'middle_name' => 'Jane',
+//     'last_name' => 'Doe',
+//     'gender' => '0',
+//     'birthday' => '1995-05-20',
+// ];
+// $student->testUpdateStudent($student_id, $update_data);
 
-// Test the delete method with the created student ID
-$student->testDeleteStudent($student_id);
+// // Test the delete method with the created student ID
+// $student->testDeleteStudent($student_id);
 
 ?>

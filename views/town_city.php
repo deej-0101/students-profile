@@ -17,6 +17,7 @@ class TownCity {
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             // Handle errors (log or display)
+            echo "Error: " . $e->getMessage();
             throw $e; // Re-throw the exception for higher-level handling
         }
     }
@@ -67,7 +68,7 @@ class TownCity {
 
     public function update($id, $data) {
         try {
-            $sql = "UPDATE town_city SET
+            $sql = "UPDATE students SET
                     name = :name
                     WHERE id = :id";
 

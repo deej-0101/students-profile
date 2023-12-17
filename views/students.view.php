@@ -1,10 +1,27 @@
 <?php
 include_once("../db.php");
 include_once("../student.php");
+include_once("../student_details.php");
 
 $db = new Database();
 $connection = $db->getConnection();
 $student = new Student($db);
+$student_details = new StudentDetails($db);
+
+$query = "SELECT count(*) as 'total' FROM province"; 
+$stmt = $db->getConnection()->prepare($query);
+$stmt->execute();
+$total_rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$rows_per_page = 50;
+$number_of_pages = ceil($total_rows[0]['total'] / $rows_per_page);
+if(!isset($_GET['page'])){
+    $page = 1;
+}else{
+    $page = $_GET['page'];
+}
+
+$page_first_result = ($page - 1) * $rows_per_page;
 
 ?>
 <!DOCTYPE html>
@@ -32,6 +49,12 @@ $student = new Student($db);
                 <th>Gender</th>
                 <th>Birthdate</th>
                 <th>Action</th>
+                <th>Contact Number</th>
+                <th>Street</th>
+                <th>Town City</th>
+                <th>Province</th>
+                <th>Zip Code</th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -50,6 +73,14 @@ $student = new Student($db);
                 <td><?php echo $result['last_name']; ?></td>
                 <td><?php echo $result['gender']; ?></td>
                 <td><?php echo $result['birthday']; ?></td>
+                <?php
+                    $y = $student_details->searchStudent($x['id']);
+                    echo "<td>". $y['contact_number'] ."</td>";
+                    echo "<td>". $y['street'] ."</td>";
+                    echo "<td>". $y['town_city'] ."</td>";
+                    echo "<td>". $y['province'] ."</td>";
+                    echo "<td>". $y['zip_code'] ."</td>";
+                ?>
                 <td>
                     <a href="student_edit.php?id=<?php echo $result['id']; ?>">Edit</a>
                     |
@@ -63,6 +94,11 @@ $student = new Student($db);
     </table>
         
     <a class="button-link" href="student_add.php">Add New Record</a>
+    <div class="pages">
+        <?= implode('', array_map(fn($page) => "<a class='pagebutton' href='students.view.php?page=$page'>$page</a>", range(1, $number_of_pages))) ?>
+    </div>
+
+
 
         </div>
         
