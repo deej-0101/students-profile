@@ -8,9 +8,9 @@
             <li class="dropdown">
                 <a href="#" class="dropbtn">Reports</a>
                 <div class="dropdown-content">
-                    <a href="report1.php">Report 1</a>
-                    <a href="report2.php">Report 2</a>
-                    <a href="report3.php">Report 3</a>
+                    <a href="../reports/report1.php">Report 1</a>
+                    <a href="../reports/report2.php">Report 2</a>
+                    <a href="../reports/report3.php">Report 3</a>
                 </div>
             </li>
         </ul>

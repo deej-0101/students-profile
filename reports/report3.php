@@ -25,7 +25,7 @@ $orderedMonths = [
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report 5 - Students Distribution by Birth Month Line Chart</title>
-    <script src="/js/chart.js"></script>
+    <script src="../js/chart.js"></script>
     <link rel="stylesheet" type="text/css" href="../css/styles.css">
 </head>
 <body>
